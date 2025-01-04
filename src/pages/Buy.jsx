@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Cards from "../components/Cards";
-import { data } from "../../data"; // Ensure your data file path is correct
+import { data } from "../../data";
 import { IoMdArrowRoundBack } from "react-icons/io";
 import { NavLink, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -35,7 +35,7 @@ const Buy = () => {
             name="filter"
             id="filter"
             onChange={(e) => setFilter(e.target.value)}
-            className="  bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500  rounded-xl py-2 px-1"
+            className="bg-gray-700 border-gray-600 placeholder-gray-400 text-white focus:ring-blue-500 focus:border-blue-500 rounded-xl py-2 px-1"
           >
             <option value="default">Filter by</option>
             <option value="rent">Rent</option>
@@ -43,7 +43,7 @@ const Buy = () => {
             <option value="commercial">Commercial</option>
           </select>
           <div className="bg-gray-700 px-4 py-2 rounded-xl border-gray-600 text-white border text-sm">
-            <NavLink to="/listing">List Ur House</NavLink>
+            <NavLink to="/listing">Rent Ur House</NavLink>
           </div>
         </div>
       </div>

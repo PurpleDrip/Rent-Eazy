@@ -46,7 +46,7 @@ const Listing = () => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded text-black"
             required
           />
         </label>
@@ -57,7 +57,7 @@ const Listing = () => {
             name="address"
             value={formData.address}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded text-black"
             required
           />
         </label>
@@ -68,7 +68,7 @@ const Listing = () => {
             name="image"
             value={formData.image}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded text-black"
             required
           />
         </label>
@@ -79,7 +79,7 @@ const Listing = () => {
             name="tag"
             value={formData.tag}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded text-black"
             required
           />
         </label>
@@ -90,7 +90,7 @@ const Listing = () => {
             name="amenities"
             value={formData.amenities}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded text-black"
             required
           />
         </label>
@@ -101,7 +101,7 @@ const Listing = () => {
             name="basePrice"
             value={formData.basePrice}
             onChange={handleChange}
-            className="border p-2 rounded"
+            className="border p-2 rounded text-black"
             required
           />
         </label>

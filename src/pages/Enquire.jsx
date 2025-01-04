@@ -38,7 +38,7 @@ const Enquire = () => {
             ))}
           </ol>
           <h1 className="text-2xl text-white text-center">
-            ${property.basePrice} per night
+            ${property.basePrice} per month.
           </h1>
           <h1 className="text-3xl text-gray-400">
             This property is rated a

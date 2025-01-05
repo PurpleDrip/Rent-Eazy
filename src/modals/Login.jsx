@@ -29,7 +29,7 @@ const Login = ({ setLoginModal }) => {
   return (
     <div className="absolute h-screen w-full top-0 left-0 z-50 bg-transparent flex items-center justify-center">
       <form
-        className="h-[50vh] w-[20vw] flex flex-col gap-8 items-center justify-center pt-4 rounded-3xl bg-black relative shadow-2xl"
+        className="h-[50vh] w-[20vw] flex flex-col gap-8 items-center justify-center pt-4 rounded-3xl bg-black relative shadow-2xl border-2 border-red-400"
         onSubmit={(e) => submitHandler(e)}
       >
         <div

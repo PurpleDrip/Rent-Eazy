@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 
 const Listing = () => {
   const [error, setError] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -26,6 +27,17 @@ const Listing = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // Basic validation
+    if (formData.basePrice <= 0) {
+      setError("Base Price should be a positive number.");
+      return;
+    }
+    if (!formData.name || !formData.address || !formData.image) {
+      setError("Please fill in all required fields.");
+      return;
+    }
+
     const formattedData = {
       ...formData,
       amenities: formData.amenities.split(",").map((item) => item.trim()),
@@ -36,7 +48,7 @@ const Listing = () => {
     axios
       .post("http://localhost:3000/addData", formattedData)
       .then((response) => {
-        setError(response.data.message);
+        setSuccessMessage(response.data.message); // Display success message
         setFormData({
           name: "",
           address: "",
@@ -45,9 +57,12 @@ const Listing = () => {
           amenities: "",
           basePrice: "",
         });
+        setError(""); // Reset error if successful
       })
       .catch((err) => {
-        setError(err.response.data.message);
+        setError(
+          err.response ? err.response.data.message : "An error occurred."
+        );
       });
   };
 
@@ -132,10 +147,12 @@ const Listing = () => {
         >
           Submit
         </button>
-        <h1 className="text-center text-red-500">{error}</h1>
+        {successMessage && (
+          <h1 className="text-center text-green-500">{successMessage}</h1>
+        )}
+        {error && <h1 className="text-center text-red-500">{error}</h1>}
       </form>
       <button className="absolute top-8 left-8">
-        {" "}
         <IoMdArrowRoundBack
           size={40}
           color="white"

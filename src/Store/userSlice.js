@@ -1,10 +1,21 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
+
+// Async thunk to fetch data from the server
+export const fetchHouseData = createAsyncThunk(
+  "user/fetchHouseData",
+  async () => {
+    const response = await axios.get("http://localhost:3000/getData");
+    return response.data;
+  }
+);
 
 let initialState = {
   isRegistered: localStorage.getItem("Registered") === "true",
   userInfo: null,
   houseData: [],
+  loading: false,
+  error: null,
 };
 
 const userSlice = createSlice({
@@ -22,17 +33,24 @@ const userSlice = createSlice({
       localStorage.setItem("Registered", "false");
       state.isRegistered = false;
     },
-    refetch(state) {
-      axios
-        .get("http://localhost:3000/getData")
-        .then((response) => {
-          dispatch(addData(response.data));
-        })
-        .catch((err) => console.log(err));
-    },
+  },
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchHouseData.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchHouseData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.houseData = action.payload;
+      })
+      .addCase(fetchHouseData.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message;
+      });
   },
 });
 
-export const { registered, addData, logout, refetch } = userSlice.actions;
+export const { registered, addData, logout } = userSlice.actions;
 
 export default userSlice.reducer;

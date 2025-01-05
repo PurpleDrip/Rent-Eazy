@@ -1,44 +1,87 @@
+import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import Delete from "./Delete";
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import { useDispatch } from "react-redux";
+import { removeItem } from "../Store/userSlice"; // Assuming removeItem is your action to remove an item
 
-const Cards = ({ data }) => {
-  const navigate = useNavigate();
-  const [menuVisibleId, setMenuVisibleId] = useState(null); // Tracks which card's menu is visible
+const Delete = ({ id, setShowMenu }) => {
+  const [isLoading, setIsLoading] = useState(false);
+  const [deleteError, setDeleteError] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  const dispatch = useDispatch();
+
+  const handleDelete = () => {
+    setIsLoading(true);
+    setDeleteError("");
+    axios
+      .post("http://localhost:3000/deletebyID", { id })
+      .then((response) => {
+        console.log(response);
+        setIsLoading(false);
+        dispatch(removeItem(id)); // Dispatch action to remove item from Redux store
+        setShowMenu(false); // Close the menu after successful delete
+      })
+      .catch((err) => {
+        setDeleteError("An error occurred while deleting.");
+        setIsLoading(false);
+        console.log(err);
+      });
+  };
+
+  const handleConfirmDelete = (e) => {
+    e.stopPropagation(); // Prevent the context menu from closing
+    setConfirmDelete(true);
+  };
+
+  const handleCancelDelete = (e) => {
+    e.stopPropagation(); // Prevent the context menu from closing
+    setConfirmDelete(false);
+  };
 
   return (
-    <div className="flex flex-wrap gap-12 w-full items-center justify-center bg-[#242424]">
-      {data.map((atom) => (
-        <div
-          key={atom._id}
-          onContextMenu={(e) => {
-            e.preventDefault(); // Prevent browser's default context menu
-            setMenuVisibleId(atom._id); // Set the ID of the card where the menu should be visible
-          }}
-          className="min-h-[20rem] w-[20rem] bg-gray-100 flex-shrink-0 flex flex-col items-center justify-center gap-2 p-4 rounded-xl relative"
-        >
-          <img src={atom.image} alt="" />
-          <h1 className="text-lg">{atom.name}</h1>
-          <p className="text-gray-700 text-lg">
-            <span className="text-xl text-black">Address-</span> {atom.address}
-          </p>
+    <div className="absolute bg-gray-700 h-full w-full rounded-lg z-50 flex items-center justify-center">
+      {!confirmDelete ? (
+        <>
           <button
-            className="bg-blue-300 px-8 py-2 rounded text-sm hover:bg-blue-200"
-            onClick={() => navigate(`/enquire`, { state: { ...atom } })}
+            className="bg-red-500 px-4 py-2 rounded-xl relative z-40"
+            onClick={handleConfirmDelete} // Show confirmation on click
           >
-            Enquire
+            Delete
           </button>
-          <h1 className="absolute text-black top-8 left-8 bg-green-400 px-3 rounded-xl text-sm py-1">
-            {atom.tag}
-          </h1>
-          {/* Show Delete menu only for the currently selected card */}
-          {menuVisibleId === atom._id && (
-            <Delete id={atom._id} setShowMenu={() => setMenuVisibleId(null)} />
+          <div
+            className="absolute top-4 right-4 cursor-pointer"
+            onClick={() => setShowMenu(false)} // Close the menu when clicking the close button
+          >
+            <AiOutlineCloseCircle size={30} color="red" />
+          </div>
+        </>
+      ) : (
+        <div className="flex flex-col items-center gap-4 p-8 bg-gray-800 rounded-lg shadow-lg z-50">
+          <p className="text-white text-xl">
+            Are you sure you want to delete this item?
+          </p>
+          <div className="flex gap-4">
+            <button
+              className="bg-green-500 px-4 py-2 rounded-xl"
+              onClick={handleDelete}
+              disabled={isLoading}
+            >
+              {isLoading ? "Deleting..." : "Yes, Delete"}
+            </button>
+            <button
+              className="bg-gray-500 px-4 py-2 rounded-xl"
+              onClick={handleCancelDelete}
+            >
+              Cancel
+            </button>
+          </div>
+          {deleteError && (
+            <p className="text-red-500 text-sm mt-4">{deleteError}</p>
           )}
         </div>
-      ))}
+      )}
     </div>
   );
 };
 
-export default Cards;
+export default Delete;

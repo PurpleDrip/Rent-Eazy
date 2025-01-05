@@ -10,14 +10,21 @@ const Buy = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const houseData = useSelector((state) => state.user.houseData);
+  const [loading, setLoading] = useState(true); // Loading state
+  const [error, setError] = useState(null); // Error state
 
   useEffect(() => {
     axios
       .get("http://localhost:3000/getData")
       .then((response) => {
         dispatch(addData(response.data));
+        setLoading(false); // Stop loading after data is fetched
       })
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        setError("Failed to fetch data. Please try again later.");
+        setLoading(false); // Stop loading if there's an error
+        console.log(err);
+      });
   }, [dispatch]);
 
   return (
@@ -34,7 +41,15 @@ const Buy = () => {
           </div>
         </div>
       </div>
-      <Cards data={houseData} />
+
+      {/* Loading state */}
+      {loading && <p className="text-center text-white">Loading...</p>}
+
+      {/* Error state */}
+      {error && <p className="text-center text-red-500">{error}</p>}
+
+      {/* Display house data */}
+      {!loading && !error && <Cards data={houseData} />}
     </>
   );
 };

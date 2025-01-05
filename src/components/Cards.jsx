@@ -2,7 +2,6 @@ import axios from "axios";
 import React, { useState } from "react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { useDispatch } from "react-redux";
-import { removeItem } from "../Store/userSlice"; // Assuming removeItem is your action to remove an item
 
 const Delete = ({ id, setShowMenu }) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -17,8 +16,8 @@ const Delete = ({ id, setShowMenu }) => {
       .post("http://localhost:3000/deletebyID", { id })
       .then((response) => {
         console.log(response);
-        setIsLoading(false);
-        dispatch(removeItem(id)); // Dispatch action to remove item from Redux store
+        I;
+        setIsLoading(false); // Dispatch action to remove item from Redux store
         setShowMenu(false); // Close the menu after successful delete
       })
       .catch((err) => {

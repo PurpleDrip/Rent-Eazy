@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import Login from "../modals/Login";
 import { NavLink } from "react-router-dom";
 import Register from "../modals/Register";
-import { useSelector } from "react-redux";
-import { register } from "../Store/userSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../Store/userSlice";
 
 const Home = () => {
   const isRegistered = useSelector((state) => state.user.isRegistered);
   console.log(isRegistered);
+
+  const dispatch = useDispatch();
 
   const [LoginModal, setLoginModal] = useState(false);
   const [RegisterModal, setRegisterModal] = useState(false);
@@ -23,6 +25,7 @@ const Home = () => {
               <>
                 <NavLink to="/rent">Browse</NavLink>
                 <NavLink to="/listing">Rent Ur House</NavLink>
+                <NavLink onClick={() => dispatch(logout())}>Log Out</NavLink>
               </>
             ) : (
               <>

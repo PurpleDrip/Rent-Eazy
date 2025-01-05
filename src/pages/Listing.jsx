@@ -1,6 +1,10 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { IoMdArrowRoundBack } from "react-icons/io";
+import { useNavigate } from "react-router-dom";
 
 const Listing = () => {
+  const [error, setError] = useState("");
   const [formData, setFormData] = useState({
     name: "",
     address: "",
@@ -9,6 +13,8 @@ const Listing = () => {
     amenities: "",
     basePrice: "",
   });
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -27,11 +33,26 @@ const Listing = () => {
       basePrice: parseInt(formData.basePrice, 10) || 0,
     };
 
-    console.log(formattedData);
+    axios
+      .post("http://localhost:3000/addData", formattedData)
+      .then((response) => {
+        setError(response.data.message);
+        setFormData({
+          name: "",
+          address: "",
+          image: "",
+          tag: "",
+          amenities: "",
+          basePrice: "",
+        });
+      })
+      .catch((err) => {
+        setError(err.response.data.message);
+      });
   };
 
   return (
-    <div className="bg-[#242424] h-screen flex items-center justify-center">
+    <div className="bg-[#242424] h-screen flex items-center justify-center relative">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col gap-4 p-8 bg-black rounded-3xl w-[30rem] text-white shadow-2xl"
@@ -111,7 +132,16 @@ const Listing = () => {
         >
           Submit
         </button>
+        <h1 className="text-center text-red-500">{error}</h1>
       </form>
+      <button className="absolute top-8 left-8">
+        {" "}
+        <IoMdArrowRoundBack
+          size={40}
+          color="white"
+          onClick={() => navigate("/")}
+        />
+      </button>
     </div>
   );
 };
